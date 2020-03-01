@@ -8,7 +8,7 @@
 #include "include/Ftree.h"
 #include "include/Table1.h"
 #include "include/Ite.h"
-//#include "include/ImpPaths.h"
+#include "include/ImpPaths.h"
 
 RcppExport SEXP get_bdd( SEXP, SEXP, SEXP, SEXP);
 
@@ -30,9 +30,9 @@ Rcpp::List pack_tags(std::unique_ptr<Ftree>& FT, std::vector<arma::Mat<int>> cs_
 
 // implementations found in file prmeimp.cpp
 RcppExport SEXP prime_implicants( SEXP, SEXP, SEXP, SEXP);
-//void solutions(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp,			
-//		std::string F_bdd,  std::string sigma);
-//std::vector<arma::Mat<int>>  bdd_path_list(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp);	
+void solutions(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp,			
+		std::string F_bdd,  std::string sigma);
+std::vector<arma::Mat<int>>  bdd_path_list(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp);	
 
 
 #endif
