@@ -1,0 +1,13 @@
+Package: FaultTreeBDD
+Title: BDD algorithms for FaultTree analysis
+Version: 0.0.2
+Date: 2020-02-29
+Author: David J. Silkworth
+Maintainer: Jacob T. Ormerod <jake@openreliability.org>
+Description:  BDD processing and Minimal cutset functions
+License: GPL (>= 3)
+LazyLoad: yes
+Depends: FaultTree
+SystemRequirements: C++11
+Imports: Rcpp (>= 0.12.4)
+LinkingTo: Rcpp, RcppArmadillo

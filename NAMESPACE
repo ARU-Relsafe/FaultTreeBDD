@@ -1,0 +1,5 @@
+useDynLib(FaultTreeBDD)
+
+importFrom(Rcpp, evalCpp)
+
+exportPattern("^[[:alpha:]]+")
