@@ -7,6 +7,7 @@
 #include <memory>
 #include "include/Ftree.h"
 #include "include/Table1.h"
+#include "include/Table2.h"
 #include "include/Ite.h"
 #include "include/ImpPaths.h"
 
@@ -33,6 +34,10 @@ RcppExport SEXP prime_implicants( SEXP, SEXP, SEXP, SEXP);
 void solutions(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp,			
 		std::string F_bdd,  std::string sigma);
 std::vector<arma::Mat<int>>  bdd_path_list(std::unique_ptr<Ftree>& FT, std::unique_ptr<ImpPaths>& Imp);	
+
+// implementations found in file probabiity.cpp
+RcppExport SEXP probability( SEXP, SEXP, SEXP, SEXP);
+double BDD_probability(std::unique_ptr<Ftree>& FT, std::unique_ptr<Table2>& T2, std::string bdd);
 
 
 #endif

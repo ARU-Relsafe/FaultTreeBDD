@@ -31,7 +31,7 @@ public:
 	unsigned int get_AND_count();
 	unsigned int get_max_order();
 	void set_max_order(unsigned int mo);
-
+	double get_prob(std::string tag_in);
 };	
 	
 #endif

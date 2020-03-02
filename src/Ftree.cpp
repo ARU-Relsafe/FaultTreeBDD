@@ -113,3 +113,14 @@ void Ftree::set_max_order(unsigned int mo)  {
 	max_order = mo;
 }
 
+double Ftree::get_prob(std::string tag_in)  {	
+	double ret = 0.0 ;
+	auto it = std::find(tag_v.begin(), tag_v.end(), tag_in);
+	if (it != tag_v.end()) {
+// string found! now get position to grab same position in pbf_v for result	
+	auto pos=std::distance(tag_v.begin(), it);
+	ret=pbf_v[pos];
+	}
+	return ret;
+}	
+	
