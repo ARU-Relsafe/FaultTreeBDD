@@ -1,5 +1,5 @@
 #include "FaultTreeBDD.h"
-
+#include "include/cuts.h"
 
 // These other includes are all in ft2.h, not needed here
 //#include "Ftree.h"
@@ -7,9 +7,12 @@
 //#include <memory>
 
 
-SEXP mocus(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node) {		
+SEXP mocus(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node, SEXP out__form) {	
 	std::unique_ptr<Ftree> FT(new Ftree(chars_in,  ints_in, nums_in));	
-	int ft_node=Rcpp::as<int>(ft__node);	
+	int ft_node=Rcpp::as<int>(ft__node);
+	int out_form=Rcpp::as<int>(out__form);
+	std::unique_ptr<Cuts>cuts(new Cuts());
+	
 		
 // out of abundance of caution set the approximate max_order member of FT		
 	FT->set_max_order(FT->get_AND_count() +1);	
@@ -31,15 +34,24 @@ SEXP mocus(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node) {
 	}
 //	return Rcpp::wrap(MinCutSets);
 	
-	return pack_tags(FT, MinCutSets);
+//	return pack_cs(FT, MinCutSets, cuts, out_form);
 	
+	//return mcub(FT, MinCutSets);
+// pack_cs places output SEXP objects into cuts			
+	pack_cs(FT, MinCutSets, cuts, out_form);		
+			
+	return Rcpp::List::create(		
+		cuts->packed_mat,	
+		cuts->orders,	
+		mcub(FT, MinCutSets));	
+
 }	
 
 std::vector<arma::Row<int>>  get_unique_paths(std::unique_ptr<Ftree>& FT, int ft_node) {						
 						
 // initialize a std::vector<arma::Row<int>>to hold the output						
 	std::vector<arma::Row<int>> upath_list;
-	
+	std::vector<std::string> upath_str_list;	
 // declare an arma row_vector to hold the path_test[eval_item] for modification and application to the unique_paths_list						
 		arma::Row<int> upath_item;
 		
@@ -111,7 +123,23 @@ std::vector<arma::Row<int>>  get_unique_paths(std::unique_ptr<Ftree>& FT, int ft
 // since the previous line may have changed the size of upath_item we now have a  size to compare								
 			if(upath_item.n_cols > FT->get_max_order())FT->set_max_order(upath_item.n_cols);			
 						
-			upath_list.push_back(upath_item);			
+// bug here because did not confirm upath_item was unique to the upath_list						
+			//upath_list.push_back(upath_item);			
+			std::string upath_str = "";				
+			for(unsigned int cs_el=0; cs_el<upath_item.n_cols; cs_el++)  {				
+				upath_str = upath_str + std::to_string(upath_item[cs_el])+ " ";			
+				}			
+			if(upath_str_list.size() > 0)  {				
+				auto it = std::find(upath_str_list.begin(), upath_str_list.end(), upath_str);			
+				if(it == upath_str_list.end())  {			
+					upath_list.push_back(upath_item);		
+					upath_str_list.push_back(upath_str);		
+				}			
+			// nothing is done if upath_item is not unique				
+			}else{				
+				upath_list.push_back(upath_item);			
+				upath_str_list.push_back(upath_str);			
+			}							
 						
 			// advance the eval_item for next pass of outer loop and re-set eval_pos			
 			eval_item++;			
@@ -148,3 +176,21 @@ std::vector<arma::Mat<int>>  generate_path_list(std::vector<arma::Row<int>> uniq
 	return cs_list;		
 }			
 	
+SEXP mcub(std::unique_ptr<Ftree>& FT, std::vector<arma::Mat<int>> cs_list)  {				
+				
+	unsigned int max_index = cs_list.size();			
+	double oneminusprob = 1.0;						
+	for(unsigned int Li=0; Li < max_index; Li++)  {			
+	if(arma::as_scalar(cs_list[Li](0,0)) != 0) {			
+		for(unsigned int cs_row=0; cs_row<cs_list[Li].n_rows; cs_row++)  {		
+			double row_prob = 1.0;	
+			for(unsigned int cs_el=0; cs_el<cs_list[Li].n_cols; cs_el++)  {	
+				row_prob = row_prob * FT->get_prob(cs_list[Li](cs_row,cs_el));
+			}	
+			oneminusprob = oneminusprob * (1.0-row_prob);	
+		}		
+	}			
+	}			
+				
+	return Rcpp::wrap(1-oneminusprob);
+}				

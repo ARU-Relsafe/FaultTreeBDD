@@ -123,4 +123,10 @@ double Ftree::get_prob(std::string tag_in)  {
 	}
 	return ret;
 }	
+
+double Ftree::get_prob(int id_in)  {	
+	arma::uvec pos=arma::find(id_a==id_in);
+	double ret=pbf_v[(int) pos(0)];
+	return ret;
+}	
 	

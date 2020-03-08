@@ -6,15 +6,16 @@
 //#include <memory>
 
 
-SEXP prime_implicants(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node) {
+SEXP prime_implicants(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node, SEXP out__form) {
 // FT holds the ftree columns of interest
 	std::unique_ptr<Ftree> FT(new Ftree(chars_in,  ints_in, nums_in));	
 // T1 and Imp objects are created and owned by prime_implicants to facilitate debugging.
 	std::unique_ptr<Table1> T1(new Table1());
 	std::unique_ptr<ImpPaths> Imp(new ImpPaths());
-
 	int ft_node=Rcpp::as<int>(ft__node);
-
+	int out_form=Rcpp::as<int>(out__form);
+	std::unique_ptr<Cuts>cuts(new Cuts());
+	
 	std::string bdd = bddgen(FT, T1, ft_node);
 //	return Rcpp::List::create(Rcpp::Named("bdd") = Rcpp::wrap(bdd),
 //	Rcpp::Named("nrow_T1") =Rcpp::wrap(T1->nrow()));
@@ -37,7 +38,14 @@ SEXP prime_implicants(SEXP chars_in, SEXP ints_in, SEXP nums_in, SEXP ft__node) 
 	}
 //	return Rcpp::wrap(PrimeImplicants);
 	
-	return pack_tags(FT, PrimeImplicants);
+	//return pack_cs(FT, PrimeImplicants);
+	// pack_cs places output SEXP objects into cuts			
+	pack_cs(FT, PrimeImplicants, cuts, out_form);		
+			
+	return Rcpp::List::create(		
+		cuts->packed_mat,	
+		cuts->orders	
+		);	
 }
 
 

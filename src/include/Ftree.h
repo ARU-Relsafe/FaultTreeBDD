@@ -32,6 +32,7 @@ public:
 	unsigned int get_max_order();
 	void set_max_order(unsigned int mo);
 	double get_prob(std::string tag_in);
+	double get_prob(int id_in);
 };	
 	
 #endif

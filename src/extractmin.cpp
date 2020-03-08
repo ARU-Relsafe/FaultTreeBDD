@@ -43,7 +43,8 @@ return cs_list;
 }
 
 
-Rcpp::List pack_tags(std::unique_ptr<Ftree>& FT, std::vector<arma::Mat<int>> cs_list)  {
+void pack_cs(std::unique_ptr<Ftree>& FT, std::vector<arma::Mat<int>> cs_list,
+		std::unique_ptr<Cuts>& cuts, int out_form)  {
  
 	unsigned int max_index = cs_list.size();
 
@@ -79,6 +80,13 @@ for(unsigned int i=0; i < final_mat.n_rows; i++)  {
 		}
 }
 
-return Rcpp::List::create(out_mat, orders);	
+//return Rcpp::List::create(out_mat, orders);	
+// set output members the cuts object		
+	if(out_form==0)  {	
+		cuts->packed_mat = Rcpp::wrap(final_mat);
+	}else{	
+		cuts->packed_mat = out_mat;
+	}	
+	cuts->orders = orders;
 
 }

@@ -5,8 +5,8 @@
 class Cuts  {	
 	
 public:
-	SEXP packed_mat
-	SEXP orders
+	SEXP packed_mat;
+	SEXP orders;
 };	
 	
 #endif	
