@@ -7,7 +7,7 @@ Maintainer: Jacob T. Ormerod <jake@openreliability.org>
 Description:  BDD processing and Minimal cutset functions
 License: GPL (>= 3)
 LazyLoad: yes
-Depends: FaultTree
+Depends: FaultTree1
 SystemRequirements: C++11
 Imports: Rcpp (>= 0.12.4)
 LinkingTo: Rcpp, RcppArmadillo
