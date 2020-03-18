@@ -1,7 +1,7 @@
 Package: FaultTreeBDD
 Title: BDD algorithms for FaultTree analysis
-Version: 0.0.2
-Date: 2020-02-29
+Version: 0.0.3
+Date: 2020-03-18
 Author: David J. Silkworth
 Maintainer: Jacob T. Ormerod <jake@openreliability.org>
 Description:  BDD processing and Minimal cutset functions
