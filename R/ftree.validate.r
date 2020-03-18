@@ -28,12 +28,12 @@ ftree.validate<-function(DF, analysis="mocus", ft_node=1) {
 	}				
 	if(any(DF$Type==3)) {				
 	stop("Pure Demand event not implemented for cutsets calls")				
-	}				
+	}	
+	
 ##  issue warning if default tags must be issued.					
-	if(any(DF$Tag[which(DF$Type<9)]=="")) {				
-	warning("Not all basic-events have tags, defaults applied")				
-	}				
-
+##	if(any(DF$Tag[which(DF$Type<9)]=="")) {				
+##	warning("Not all basic-events have tags, defaults applied")				
+##	}				
 					
 ## mission time validation is only applicable to SCRAM processing	
 if(analysis=="scram") {		
